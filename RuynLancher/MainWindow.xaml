@@ -1,0 +1,15 @@
+﻿<Window x:Class="RuynLancher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RuynLancher"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Button x:Name="LaunchGame" Content="Launch" HorizontalAlignment="Left" Height="49" Margin="62,196,0,0" VerticalAlignment="Top" Width="125" Click="Button_Click"/>
+        <CheckBox x:Name="Windowed" Content="Run Windowed" HorizontalAlignment="Left" Margin="202,220,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="LaunchEditor" Content="Launch Level Editor" HorizontalAlignment="Left" Height="49" Margin="62,131,0,0" VerticalAlignment="Top" Width="125" Click="LaunchEditor_Click"/>
+        <Button x:Name="UploadLevels" Content="Upload level pack" HorizontalAlignment="Left" Height="49" Margin="62,65,0,0" VerticalAlignment="Top" Width="125" Click="UploadLevels_Click"/>
+    </Grid>
+</Window>
