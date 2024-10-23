@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
+using System.IO.Compression;
+using static RuynLancher.Constants;
 
 namespace RuynLancher
 {
@@ -16,16 +18,6 @@ namespace RuynLancher
     /// </summary>
     public partial class MainWindow : Window
     {
-        const string EDITOR_NAME = "NekoNeo";
-        const string EXE_NAME = "Ruyn";
-        const string LEVELS_FOLDER = @"\Levels";
-#if DEBUG
-        const string GAME_FILE_LOCATION = @"c:\projects\NekoEngine";
-
-#else
-        const string GAME_FILE_LOCATION = @".\";
-#endif
-
         public MainWindow()
         {
             InitializeComponent();
@@ -39,7 +31,7 @@ namespace RuynLancher
                 windowed = Windowed.IsChecked.Value;
             }
 
-            Environment.CurrentDirectory = GAME_FILE_LOCATION;
+            Environment.CurrentDirectory = Constants.GAME_FILE_LOCATION;
             string args = "";
             if (windowed)
             {
@@ -67,42 +59,22 @@ namespace RuynLancher
             });
         }
 
-        private static bool IsValidLevelName(string? fileName)
+        private void ShowInputDialog_Click()
         {
-            Regex regex = new Regex(@"^level\d{2}\.had$", RegexOptions.IgnoreCase);
-            if (fileName is not null)
-            { 
-                return regex.IsMatch(fileName);
-            }
+            // Create and show the input dialog
+            UploadDetailsWindow inputDialog = new UploadDetailsWindow();
+            bool? result = inputDialog.ShowDialog();
 
-            return false;
+            if (result == true)
+            {
+                string userName = inputDialog.LevelPackName;
+                MessageBox.Show($"Hello, {userName}!", "Welcome");
+            }
         }
 
         private void UploadLevels_Click(object sender, RoutedEventArgs e)
         {
-            string folderName = string.Empty;
-
-            OpenFolderDialog openFolderDialog = new OpenFolderDialog();
-            openFolderDialog.Title = "Select a folder";
-
-            var folderDialog = new OpenFolderDialog { };
-
-            if (folderDialog.ShowDialog() == true)
-            {
-                folderName = folderDialog.FolderName;
-            }
-
-            var fileNames = Directory.EnumerateFiles(folderName).Select(x => Path.GetFileName(x));
-
-            List<string> validFileNames = [];
-
-            foreach (var file in fileNames)
-            {
-                if (IsValidLevelName(file))
-                {
-                    validFileNames.Add(file);
-                }
-            }
+            ShowInputDialog_Click();
         }
     }
 }
