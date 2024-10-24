@@ -64,12 +64,6 @@ namespace RuynLancher
             // Create and show the input dialog
             UploadDetailsWindow inputDialog = new UploadDetailsWindow();
             bool? result = inputDialog.ShowDialog();
-
-            if (result == true)
-            {
-                string userName = inputDialog.LevelPackName;
-                MessageBox.Show($"Hello, {userName}!", "Welcome");
-            }
         }
 
         private void UploadLevels_Click(object sender, RoutedEventArgs e)

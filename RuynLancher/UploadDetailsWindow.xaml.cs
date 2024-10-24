@@ -6,9 +6,13 @@ using System;
 using System.Windows;
 using Microsoft.Win32;
 using static RuynLancher.Constants;
+using System.Drawing.Printing;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace RuynLancher
 {
+
     /// <summary>
     /// Interaction logic for UploadDetailsWindow.xaml
     /// </summary>
@@ -17,9 +21,15 @@ namespace RuynLancher
         public string LevelPackName = string.Empty;
         public string Author = string.Empty;
 
+        private static RuynServer? _server = null;
 
         public UploadDetailsWindow()
         {
+            if (_server is null)
+            {
+                _server = new RuynServer("http://localhost:5202/api/v1/", new HttpClient());
+            }
+
             InitializeComponent();
         }
         private static bool IsValidLevelName(string? fileName)
@@ -81,10 +91,9 @@ namespace RuynLancher
             return false;
         }
 
-
-        private void OK_Click(object sender, RoutedEventArgs e)
+        private async Task UploadLevelPack()
         {
-            LevelPackName = LevelPackNameInput.Text; 
+            LevelPackName = LevelPackNameInput.Text;
             Author = LevelPackAuthor.Text;
 
             string folderName = string.Empty;
@@ -102,12 +111,13 @@ namespace RuynLancher
             var fileNames = Directory.EnumerateFiles(folderName);
 
             List<string> validFileNames = [];
-
+            int levelCount = 0;
             foreach (var file in fileNames)
             {
                 if (IsValidLevelName(Path.GetFileName(file)) && ValidateLevel(file))
                 {
                     validFileNames.Add(file);
+                    levelCount++;
                 }
             }
 
@@ -116,8 +126,32 @@ namespace RuynLancher
             // Call the method to zip files
             ZipFiles(validFileNames, zipFilePath);
 
+
+            try
+            {
+                await _server?.AddLevelPackAsync(new LevelData
+                {
+                    Author = string.IsNullOrEmpty(Author) ? "Anonymous" : Author,
+                    LevelCount = levelCount,
+                    UploadDate = DateTime.Now,
+                    FileData = System.IO.File.ReadAllBytes(zipFilePath),
+                    LevelPackName = LevelPackName
+                });
+            }
+            catch (ApiException ex)
+            {
+                MessageBox.Show($"Could not upload file. {ex.Message}", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
             this.DialogResult = true;
             this.Close();
+        }
+
+
+
+        private async void OK_Click(object sender, RoutedEventArgs e)
+        {
+            await UploadLevelPack();
         }
 
         private void LevelPackNameInput_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
