@@ -10,6 +10,7 @@ using System.Windows;
 using Microsoft.Win32;
 using System.IO.Compression;
 using static RuynLancher.Constants;
+using System.Windows.Controls;
 
 namespace RuynLancher
 {
@@ -21,7 +22,26 @@ namespace RuynLancher
         public MainWindow()
         {
             InitializeComponent();
+
         }
+
+        private void UpdateAvailablePackList()
+        {
+            if (!Directory.Exists(LEVELS_FOLDER)) { return; }
+
+            DownloadedLevelPacks.Items.Clear();
+            foreach (var levelpack in Directory.GetDirectories(LEVELS_FOLDER))
+            {
+                DownloadedLevelPacks.Items.Add(Path.GetFileName(levelpack));
+            }
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            await UpdateLevelPacks();
+            UpdateAvailablePackList();
+        }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -69,6 +89,112 @@ namespace RuynLancher
         private void UploadLevels_Click(object sender, RoutedEventArgs e)
         {
             ShowInputDialog_Click();
+        }
+
+        private static int _selectedId = -1;
+
+        private void LevelPackDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            var data = e.AddedItems[0] as dynamic;
+            int? id = data?.Id ?? -1;
+
+            if (id is not null && id > -1)
+            {
+                _selectedId = id ?? -1;
+            }
+
+            DownloadButton.IsEnabled = id > -1;
+        }
+
+        private async Task DownloadPack(int id)
+        {
+            try
+            {
+                LevelData downloadedPack = await Server.Get().GetLevelPackByIdAsync(id);
+                if (downloadedPack?.LevelPackName is null) { return; }
+
+                string directory = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER, downloadedPack.LevelPackName);
+                Directory.CreateDirectory(directory);
+
+                string tempName = Guid.NewGuid().ToString();
+
+                string fullPath = Path.Combine(directory, tempName);
+                
+                // Clear out all the old level files
+                if (Directory.Exists(directory))
+                {
+                    foreach (string filePath in Directory.GetFiles(directory))
+                    {
+                        File.Delete(filePath);
+                    }
+                }
+
+                File.WriteAllBytes(fullPath, downloadedPack.FileData);
+
+                using (FileStream zipToOpen = new FileStream(fullPath, FileMode.Open))
+                {
+                    using (ZipArchive archive = new ZipArchive(zipToOpen, ZipArchiveMode.Read))
+                    {
+                        archive.ExtractToDirectory(directory);
+                    }
+                }
+                File.Delete(fullPath);
+                UpdateAvailablePackList();
+                MessageBox.Show($"Level pack downloaded!", "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (ApiException ex)
+            {
+                MessageBox.Show($"Server error, could not download file", "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Something went wrong. Could not save to levels to disk", "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+
+        }
+
+        private async Task UpdateLevelPacks(OrderByFilters filters = OrderByFilters.UploadedDate)
+        {
+            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(null, null, 0, 20, filters);
+
+            LevelPackDataGrid.ItemsSource = levelPacks;
+        }
+
+        private async void LevelPackDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
+        {
+            // Get the column that was clicked
+            var column = e.Column.Header;
+
+            OrderByFilters filter = OrderByFilters.UploadedDate;
+
+            switch (column)
+            {
+                case "Name":
+                    filter = OrderByFilters.Name; 
+                    break;
+                case "Author":
+                    filter = OrderByFilters.Author;
+                    break;
+                case "Level Count":
+                    filter = OrderByFilters.LevelCount;
+                    break;
+                case "Download Count":
+                    filter = OrderByFilters.DownloadCount;
+                    break;
+            }
+
+            await UpdateLevelPacks(filter);
+
+            e.Handled = true;
+        }
+
+        private async void DownloadButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_selectedId > -1)
+            { 
+                await DownloadPack(_selectedId);
+            }
         }
     }
 }

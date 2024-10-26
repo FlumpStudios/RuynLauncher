@@ -21,15 +21,8 @@ namespace RuynLancher
         public string LevelPackName = string.Empty;
         public string Author = string.Empty;
 
-        private static RuynServer? _server = null;
-
         public UploadDetailsWindow()
         {
-            if (_server is null)
-            {
-                _server = new RuynServer("http://localhost:5202/api/v1/", new HttpClient());
-            }
-
             InitializeComponent();
         }
         private static bool IsValidLevelName(string? fileName)
@@ -128,8 +121,8 @@ namespace RuynLancher
 
 
             try
-            {
-                await _server?.AddLevelPackAsync(new LevelData
+            {   
+                await Server.Get().AddLevelPackAsync(new LevelData
                 {
                     Author = string.IsNullOrEmpty(Author) ? "Anonymous" : Author,
                     LevelCount = levelCount,
@@ -140,7 +133,7 @@ namespace RuynLancher
             }
             catch (ApiException ex)
             {
-                MessageBox.Show($"Could not upload file. {ex.Message}", "Alert", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Could not upload file", "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             this.DialogResult = true;
