@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using Microsoft.Win32;
 using System.IO.Compression;
 using static RuynLancher.Constants;
 using System.Windows.Controls;
@@ -19,10 +15,11 @@ namespace RuynLancher
     /// </summary>
     public partial class MainWindow : Window
     {
+        static string _currentSelection = string.Empty;
+        private static string _activePack = string.Empty;
         public MainWindow()
         {
             InitializeComponent();
-
         }
 
         private void UpdateAvailablePackList()
@@ -32,7 +29,10 @@ namespace RuynLancher
             DownloadedLevelPacks.Items.Clear();
             foreach (var levelpack in Directory.GetDirectories(LEVELS_FOLDER))
             {
-                DownloadedLevelPacks.Items.Add(Path.GetFileName(levelpack));
+                string fileName = Path.GetFileName(levelpack);
+
+                if (fileName == _activePack) { fileName += " - ACTIVE"; }
+                DownloadedLevelPacks.Items.Add(fileName);
             }
         }
 
@@ -195,6 +195,24 @@ namespace RuynLancher
             { 
                 await DownloadPack(_selectedId);
             }
+        }
+
+        
+        private void DownloadedLevelPacks_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.Count < 1) { return; }
+            var selection = e.AddedItems[0] as dynamic;
+            if (selection is not null)
+            { 
+                _currentSelection = selection as string;
+            }
+        }
+
+        private void SetActive_Click(object sender, RoutedEventArgs e)
+        {
+            _activePack = _currentSelection;
+            UpdateAvailablePackList();
+
         }
     }
 }
