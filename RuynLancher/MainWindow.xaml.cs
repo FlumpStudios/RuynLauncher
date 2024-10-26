@@ -17,9 +17,7 @@ namespace RuynLancher
     public partial class MainWindow : Window
     {
         const string ACTIVE_STRING = " - ACTIVE";
-
-        private static OrderByFilters currentFilter = OrderByFilters.UploadedDate;
-
+        private static OrderByFilters _currentFilter = OrderByFilters.UploadedDate;
         private static string _currentSelection = string.Empty;
         private static string _activePack = string.Empty;
         public MainWindow()
@@ -43,7 +41,7 @@ namespace RuynLancher
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            await UpdateLevelPacks();
+            await UpdateLevelPacks(OrderByFilters.UploadedDate, true);
             UpdateAvailablePackList();
         }
 
@@ -159,16 +157,17 @@ namespace RuynLancher
 
         }
 
-        private async Task UpdateLevelPacks(OrderByFilters filters = OrderByFilters.UploadedDate)
+        private async Task UpdateLevelPacks(OrderByFilters filters = OrderByFilters.UploadedDate, bool decending = false)
         {
-            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(null, 0, 20, filters, false);
+            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(null, 0, 20, filters, decending);
             LevelPackDataGrid.ItemsSource = levelPacks.Select(x => new { x.Id, UploadDate = x.UploadDate.ToString()[..10], x.LevelPackName, x.Author, x.LevelCount, x.DownloadCount });
         }
 
         private async void LevelPackDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
         {
+            e.Handled = true;
             // Get the column that was clicked
-            var column = e.Column.Header;
+            var column = e.Column.Header as string;
 
             OrderByFilters filter = OrderByFilters.UploadedDate;
 
@@ -180,7 +179,6 @@ namespace RuynLancher
                     filter = OrderByFilters.UploadedDate;
                     decending = true;
                     break;
-
                 case "Name":
                     filter = OrderByFilters.Name;
                     decending = false;
@@ -191,15 +189,23 @@ namespace RuynLancher
                     break;
                 case "Level Count":
                     filter = OrderByFilters.LevelCount;
-                    decending = false;
+                    decending = true;
                     break;
                 case "Download Count":
                     filter = OrderByFilters.DownloadCount;
-                    decending = false;
+                    decending = true;
                     break;
             }
 
-            await UpdateLevelPacks(filter);
+            if (filter == _currentFilter)
+            {
+                return;
+            }
+
+            _currentFilter = filter;
+
+
+            await UpdateLevelPacks(filter, decending);
 
             e.Handled = true;
         }
