@@ -16,6 +16,7 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Visibility="Hidden" Header="Id" Binding="{Binding Id}" Width="*"/>
+                <DataGridTextColumn Header="Upload Date" Binding="{Binding UploadDate}" Width="*"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding LevelPackName}" Width="*"/>
                 <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="*"/>
                 <DataGridTextColumn Header="Level Count" Binding="{Binding LevelCount}" Width="*"/>
@@ -26,6 +27,5 @@
         <Button x:Name="DownloadButton" Content="Download Pack" IsEnabled="False"  HorizontalAlignment="Left" Margin="347,451,0,0" VerticalAlignment="Top" Height="40" Click="DownloadButton_Click"/>
         <Label x:Name="DownloadedPack" Content="Downloaded level packs" HorizontalAlignment="Left" Margin="347,47,0,0" VerticalAlignment="Top"/>
         <ListBox x:Name="DownloadedLevelPacks" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="347,73,10,372" SelectionChanged="DownloadedLevelPacks_SelectionChanged"/>
-        <Button x:Name="SetActive" Content="Set Active" HorizontalAlignment="Left" Margin="350,156,0,0" VerticalAlignment="Top" Click="SetActive_Click"/>
     </Grid>
 </Window>

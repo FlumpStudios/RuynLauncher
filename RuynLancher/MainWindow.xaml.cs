@@ -7,6 +7,7 @@ using System.Windows;
 using System.IO.Compression;
 using static RuynLancher.Constants;
 using System.Windows.Controls;
+using System.Linq;
 
 namespace RuynLancher
 {
@@ -15,7 +16,11 @@ namespace RuynLancher
     /// </summary>
     public partial class MainWindow : Window
     {
-        static string _currentSelection = string.Empty;
+        const string ACTIVE_STRING = " - ACTIVE";
+
+        private static OrderByFilters currentFilter = OrderByFilters.UploadedDate;
+
+        private static string _currentSelection = string.Empty;
         private static string _activePack = string.Empty;
         public MainWindow()
         {
@@ -31,7 +36,7 @@ namespace RuynLancher
             {
                 string fileName = Path.GetFileName(levelpack);
 
-                if (fileName == _activePack) { fileName += " - ACTIVE"; }
+                if (fileName == _activePack) { fileName += ACTIVE_STRING; }
                 DownloadedLevelPacks.Items.Add(fileName);
             }
         }
@@ -156,9 +161,8 @@ namespace RuynLancher
 
         private async Task UpdateLevelPacks(OrderByFilters filters = OrderByFilters.UploadedDate)
         {
-            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(null, null, 0, 20, filters);
-
-            LevelPackDataGrid.ItemsSource = levelPacks;
+            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(null, 0, 20, filters, false);
+            LevelPackDataGrid.ItemsSource = levelPacks.Select(x => new { x.Id, UploadDate = x.UploadDate.ToString()[..10], x.LevelPackName, x.Author, x.LevelCount, x.DownloadCount });
         }
 
         private async void LevelPackDataGrid_Sorting(object sender, DataGridSortingEventArgs e)
@@ -168,19 +172,30 @@ namespace RuynLancher
 
             OrderByFilters filter = OrderByFilters.UploadedDate;
 
+            bool decending = false;
+
             switch (column)
             {
+                case "Upload Date":
+                    filter = OrderByFilters.UploadedDate;
+                    decending = true;
+                    break;
+
                 case "Name":
-                    filter = OrderByFilters.Name; 
+                    filter = OrderByFilters.Name;
+                    decending = false;
                     break;
                 case "Author":
                     filter = OrderByFilters.Author;
+                    decending = false;
                     break;
                 case "Level Count":
                     filter = OrderByFilters.LevelCount;
+                    decending = false;
                     break;
                 case "Download Count":
                     filter = OrderByFilters.DownloadCount;
+                    decending = false;
                     break;
             }
 
@@ -203,16 +218,12 @@ namespace RuynLancher
             if (e.AddedItems.Count < 1) { return; }
             var selection = e.AddedItems[0] as dynamic;
             if (selection is not null)
-            { 
+            {   if((selection as string).ToUpper().Contains("- ACTIVE")) { return; }
+
                 _currentSelection = selection as string;
+                _activePack = _currentSelection;
+                UpdateAvailablePackList();
             }
-        }
-
-        private void SetActive_Click(object sender, RoutedEventArgs e)
-        {
-            _activePack = _currentSelection;
-            UpdateAvailablePackList();
-
         }
     }
 }

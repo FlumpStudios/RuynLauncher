@@ -13,14 +13,7 @@
         "operationId": "GetLevelList",
         "parameters": [
           {
-            "name": "nameSearch",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorSeach",
+            "name": "search",
             "in": "query",
             "schema": {
               "type": "string"
@@ -50,6 +43,14 @@
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/OrderByFilters"
+            }
+          },
+          {
+            "name": "decending",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
             }
           }
         ],
