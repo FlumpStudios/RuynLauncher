@@ -9,6 +9,7 @@ using static RuynLancher.Constants;
 using System.Drawing.Printing;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace RuynLancher
 {
@@ -119,7 +120,6 @@ namespace RuynLancher
             // Call the method to zip files
             ZipFiles(validFileNames, zipFilePath);
 
-
             try
             {   
                 await Server.Get().AddLevelPackAsync(new LevelData
@@ -127,7 +127,7 @@ namespace RuynLancher
                     Author = string.IsNullOrEmpty(Author) ? "Anonymous" : Author,
                     LevelCount = levelCount,
                     UploadDate = DateTime.Now,
-                    FileData = System.IO.File.ReadAllBytes(zipFilePath),
+                    FileData = File.ReadAllBytes(zipFilePath),
                     LevelPackName = LevelPackName
                 });
             }
@@ -140,6 +140,11 @@ namespace RuynLancher
             this.Close();
         }
 
+        private void InputTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("^[a-zA-Z0-9 ]*$");
+            e.Handled = !regex.IsMatch(e.Text);
+        }
 
 
         private async void OK_Click(object sender, RoutedEventArgs e)

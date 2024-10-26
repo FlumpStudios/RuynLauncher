@@ -8,6 +8,8 @@ using System.IO.Compression;
 using static RuynLancher.Constants;
 using System.Windows.Controls;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Input;
 
 namespace RuynLancher
 {
@@ -32,7 +34,7 @@ namespace RuynLancher
             DownloadedLevelPacks.Items.Clear();
             foreach (var levelpack in Directory.GetDirectories(LEVELS_FOLDER))
             {
-                string fileName = Path.GetFileName(levelpack);
+                string fileName = Path.GetFileName(levelpack).Replace("_", " ");
 
                 if (fileName == _activePack) { fileName += ACTIVE_STRING; }
                 DownloadedLevelPacks.Items.Add(fileName);
@@ -61,6 +63,8 @@ namespace RuynLancher
                 args += " -w";
             }
 
+            args += $" -p {_activePack.Replace(" ","_")}";
+
             Process.Start(new ProcessStartInfo
             {
                 FileName = $"{GAME_FILE_LOCATION}\\{EXE_NAME}.exe",
@@ -70,6 +74,7 @@ namespace RuynLancher
             });
         }
 
+     
         private void LaunchEditor_Click(object sender, RoutedEventArgs e)
         {
             Environment.CurrentDirectory = GAME_FILE_LOCATION;
@@ -116,7 +121,7 @@ namespace RuynLancher
                 LevelData downloadedPack = await Server.Get().GetLevelPackByIdAsync(id);
                 if (downloadedPack?.LevelPackName is null) { return; }
 
-                string directory = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER, downloadedPack.LevelPackName);
+                string directory = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER, downloadedPack.LevelPackName).Replace(" ","_");
                 Directory.CreateDirectory(directory);
 
                 string tempName = Guid.NewGuid().ToString();

@@ -5,9 +5,9 @@
     <Grid Width="300" Height="186">
         <!-- Add controls here, for example, a label and text box -->
         <TextBlock Margin="10,10,10,74" Width="280" Height="102"><Run Language="en-gb" Text="Name of the level pack"/><Run Text=":"/></TextBlock>
-        <TextBox x:Name="LevelPackNameInput" MaxLength="50" Margin="10,32,10,129" Width="280" Height="25" TextChanged="LevelPackNameInput_TextChanged" />
+        <TextBox x:Name="LevelPackNameInput" MaxLength="50" Margin="10,32,10,129" Width="280" PreviewTextInput="InputTextBox_PreviewTextInput" Height="25" TextChanged="LevelPackNameInput_TextChanged" TabIndex="1" />
         <Button x:Name="SubmitButton" Content="Submit" HorizontalAlignment="Center" IsEnabled="False" VerticalAlignment="Top" Click="OK_Click" Margin="0,117,0,0" Width="280" Height="31"/>
         <TextBlock Margin="10,60,10,100"><Run Language="en-gb" Text="Name of author:"/><LineBreak/><Run Language="en-gb"/></TextBlock>
-        <TextBox x:Name="LevelPackAuthor" MaxLength="10" Margin="10,80,10,80" />
+        <TextBox x:Name="LevelPackAuthor" PreviewTextInput="InputTextBox_PreviewTextInput"   MaxLength="10" Margin="10,80,10,80" TabIndex="2" />
     </Grid>
 </Window>
