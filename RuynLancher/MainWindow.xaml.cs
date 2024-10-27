@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.IO.Compression;
 using static RuynLancher.Constants;
+using Microsoft.VisualBasic;
+
 using System.Windows.Controls;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -20,7 +22,9 @@ namespace RuynLancher
     {
         const string ACTIVE_STRING = " - ACTIVE";
         private static OrderByFilters _currentFilter = OrderByFilters.UploadedDate;
+        private static string _searchTerm = string.Empty;
         private static string _currentSelection = string.Empty;
+        private static bool _decending = true;
         private static string _activePack = string.Empty;
         public MainWindow()
         {
@@ -43,7 +47,7 @@ namespace RuynLancher
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            await UpdateLevelPacks(OrderByFilters.UploadedDate, true);
+            await UpdateLevelPacks();
             UpdateAvailablePackList();
         }
 
@@ -148,23 +152,23 @@ namespace RuynLancher
                 }
                 File.Delete(fullPath);
                 UpdateAvailablePackList();
-                MessageBox.Show($"Level pack downloaded!", "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Level pack downloaded!", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (ApiException ex)
             {
-                MessageBox.Show($"Server error, could not download file", "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Server error, could not download file", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Something went wrong. Could not save to levels to disk", "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Something went wrong. Could not save to levels to disk", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
 
         }
 
-        private async Task UpdateLevelPacks(OrderByFilters filters = OrderByFilters.UploadedDate, bool decending = false)
+        private async Task UpdateLevelPacks()
         {
-            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(null, 0, 20, filters, decending);
+            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(_searchTerm, 0, 20, _currentFilter, _decending);
             LevelPackDataGrid.ItemsSource = levelPacks.Select(x => new { x.Id, UploadDate = x.UploadDate.ToString()[..10], x.LevelPackName, x.Author, x.LevelCount, x.DownloadCount });
         }
 
@@ -208,9 +212,9 @@ namespace RuynLancher
             }
 
             _currentFilter = filter;
+            _decending = decending;
 
-
-            await UpdateLevelPacks(filter, decending);
+            await UpdateLevelPacks();
 
             e.Handled = true;
         }
@@ -235,6 +239,48 @@ namespace RuynLancher
                 _activePack = _currentSelection;
                 UpdateAvailablePackList();
             }
+        }
+
+        private async Task RunSearch()
+        {
+            _searchTerm = SearchBox.Text;
+            await UpdateLevelPacks();
+        }
+
+        private async void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            await RunSearch();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            string input = Interaction.InputBox("Please entere a name for your new level pack:", "Name your level pack", "");
+            
+            if (string.IsNullOrEmpty(input))
+            {
+                return;
+            }
+
+            if (input.Length >= 50)
+            {
+                MessageBox.Show($"Your level pack name must be under 50 characters", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            string directory = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER, input.Replace(" ", "_"));
+
+            if (Directory.Exists(directory))
+            {
+                MessageBox.Show($"Level Pack Already Exists!", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                return;
+            }
+
+            Directory.CreateDirectory(directory);
+
+            MessageBox.Show($"New Level Pack Created!", "Yay!", MessageBoxButton.OK, MessageBoxImage.Information);
+            _activePack = input;
+            UpdateAvailablePackList();
         }
     }
 }

@@ -10,6 +10,7 @@ using System.Drawing.Printing;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Linq;
 
 namespace RuynLancher
 {
@@ -104,6 +105,12 @@ namespace RuynLancher
 
             var fileNames = Directory.EnumerateFiles(folderName);
 
+            if (!fileNames.Any())
+            {
+                MessageBox.Show($"No levels found in pack", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             List<string> validFileNames = [];
             int levelCount = 0;
             foreach (var file in fileNames)
@@ -133,9 +140,10 @@ namespace RuynLancher
             }
             catch (ApiException ex)
             {
-                MessageBox.Show($"Could not upload file", "Alert", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Could not upload file", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
+            MessageBox.Show($"File uploaded successfully", "Yay!", MessageBoxButton.OK, MessageBoxImage.Information);
             this.DialogResult = true;
             this.Close();
         }
