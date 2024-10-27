@@ -140,7 +140,15 @@ namespace RuynLancher
             }
             catch (ApiException ex)
             {
-                MessageBox.Show($"Could not upload file", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                if (ex.StatusCode == 409)
+                {
+                    MessageBox.Show($"level pack '{LevelPackName}' already exists", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                { 
+                    MessageBox.Show($"Could not upload file", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                return;
             }
 
             MessageBox.Show($"File uploaded successfully", "Yay!", MessageBoxButton.OK, MessageBoxImage.Information);
