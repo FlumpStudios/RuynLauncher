@@ -82,8 +82,8 @@ namespace RuynLancher
             Process.Start(new ProcessStartInfo
             {
                 FileName = $"{GAME_FILE_LOCATION}\\{EDITOR_NAME}.exe",
-                WorkingDirectory = GAME_FILE_LOCATION
-                // Arguments = args
+                WorkingDirectory = GAME_FILE_LOCATION,
+                Arguments = $" { _activePack.Replace(" ", "_")}" 
             });
         }
 
