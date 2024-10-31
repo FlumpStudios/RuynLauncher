@@ -127,6 +127,7 @@ namespace RuynLancher
             // Call the method to zip files
             ZipFiles(validFileNames, zipFilePath);
 
+            const int SQL_CONFLICT_ERROR_CODE = 409;
             try
             {   
                 await Server.Get().AddLevelPackAsync(new LevelData
@@ -140,7 +141,7 @@ namespace RuynLancher
             }
             catch (ApiException ex)
             {
-                if (ex.StatusCode == 409)
+                if (ex.StatusCode == SQL_CONFLICT_ERROR_CODE)
                 {
                     MessageBox.Show($"level pack '{LevelPackName}' already exists", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }

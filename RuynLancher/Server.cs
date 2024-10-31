@@ -3,13 +3,18 @@ namespace RuynLancher
 {
     public static class Server
     {
+
+        public static string _apiKey = string.Empty;
         private static RuynServer? _server = null;
 
         public static RuynServer Get()
         {
             if (_server is null)
             {
-                _server = new RuynServer("http://localhost:5202", new HttpClient());
+                var apikey = Security.GetApiKey();
+                var h = new HttpClient();
+                h.DefaultRequestHeaders.Add("X-Api-Key", apikey);
+                _server = new RuynServer("http://localhost:5202", h);
             }
             return _server;
         }

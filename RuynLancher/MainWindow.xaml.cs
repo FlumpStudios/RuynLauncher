@@ -12,9 +12,19 @@ using System.Windows.Controls;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using System.Drawing.Printing;
 
 namespace RuynLancher
 {
+
+    public static class SaveData
+    {
+        public static string ActivePack = string.Empty;
+    }
+
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -25,7 +35,7 @@ namespace RuynLancher
         private static string _searchTerm = string.Empty;
         private static string _currentSelection = string.Empty;
         private static bool _decending = true;
-        private static string _activePack = string.Empty;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -39,14 +49,20 @@ namespace RuynLancher
             foreach (var levelpack in Directory.GetDirectories(LEVELS_FOLDER))
             {
                 string fileName = Path.GetFileName(levelpack).Replace("_", " ");
+                
+                if (string.IsNullOrEmpty(SaveData.ActivePack))
+                {
+                    SaveData.ActivePack = fileName;
+                }
 
-                if (fileName == _activePack) { fileName += ACTIVE_STRING; }
+                if (fileName == SaveData.ActivePack) { fileName += ACTIVE_STRING; }
                 DownloadedLevelPacks.Items.Add(fileName);
             }
         }
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            LoadSettings();
             await UpdateLevelPacks();
             UpdateAvailablePackList();
         }
@@ -67,7 +83,7 @@ namespace RuynLancher
                 args += " -w";
             }
 
-            args += $" -p {_activePack.Replace(" ","_")}";
+            args += $" -p {SaveData.ActivePack.Replace(" ","_")}";
 
             Process.Start(new ProcessStartInfo
             {
@@ -87,7 +103,7 @@ namespace RuynLancher
             {
                 FileName = $"{GAME_FILE_LOCATION}\\{EDITOR_NAME}.exe",
                 WorkingDirectory = GAME_FILE_LOCATION,
-                Arguments = $" { _activePack.Replace(" ", "_")}" 
+                Arguments = $" { SaveData.ActivePack.Replace(" ", "_")}" 
             });
         }
 
@@ -104,6 +120,7 @@ namespace RuynLancher
         }
 
         private static int _selectedId = -1;
+        private object memoryStream;
 
         private void LevelPackDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
@@ -227,7 +244,30 @@ namespace RuynLancher
             }
         }
 
+        private void LoadSettings()
+        {
+
+            if(File.Exists(SETTINGS_SAVE_FILE_NAME))
+            { 
+                var saveData = File.ReadAllBytes(SETTINGS_SAVE_FILE_NAME);
+
+                using var memoryStream = new MemoryStream(saveData);
+                using var reader = new BinaryReader(memoryStream, Encoding.UTF8, true);
+                SaveData.ActivePack = reader.ReadString();
+            }
+
+        }
         
+        private void SaveSettings()
+        {
+            using var memoryStream = new MemoryStream();
+
+            using var writer = new BinaryWriter(memoryStream, Encoding.UTF8, true);
+            writer.Write(SaveData.ActivePack);
+            var bd = memoryStream.ToArray();
+            File.WriteAllBytes(SETTINGS_SAVE_FILE_NAME, bd);
+        }
+
         private void DownloadedLevelPacks_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count < 1) { return; }
@@ -236,8 +276,9 @@ namespace RuynLancher
             {   if((selection as string).ToUpper().Contains("- ACTIVE")) { return; }
 
                 _currentSelection = selection as string;
-                _activePack = _currentSelection;
+                SaveData.ActivePack = _currentSelection;
                 UpdateAvailablePackList();
+                SaveSettings();
             }
         }
 
@@ -279,7 +320,7 @@ namespace RuynLancher
             Directory.CreateDirectory(directory);
 
             MessageBox.Show($"New Level Pack Created!", "Yay!", MessageBoxButton.OK, MessageBoxImage.Information);
-            _activePack = input;
+            SaveData.ActivePack = input;
             UpdateAvailablePackList();
         }
     }
