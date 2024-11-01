@@ -70,6 +70,8 @@ namespace RuynLancher
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            if (!CheckForActiveLevelBack()) { return; }
+
             bool windowed = false;
             if (Windowed?.IsChecked is not null)
             {
@@ -94,11 +96,22 @@ namespace RuynLancher
             });
         }
 
-     
+
+        private bool CheckForActiveLevelBack()
+        {
+            if (string.IsNullOrEmpty(SaveData.ActivePack))
+            {
+                MessageBox.Show($"There are no level packs acvite", "Warning!", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            return true;
+        }
+
         private void LaunchEditor_Click(object sender, RoutedEventArgs e)
         {
-            Environment.CurrentDirectory = GAME_FILE_LOCATION;
- 
+            if (!CheckForActiveLevelBack()) { return; }
+
+            Environment.CurrentDirectory = GAME_FILE_LOCATION; 
             Process.Start(new ProcessStartInfo
             {
                 FileName = $"{GAME_FILE_LOCATION}\\{EDITOR_NAME}.exe",

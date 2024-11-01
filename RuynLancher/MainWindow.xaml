@@ -7,13 +7,18 @@
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
-        Title="Ruyn Launcher" Height="556" Width="960" Left="0" Top="0">
-    <Grid Margin="0,0,0,18" HorizontalAlignment="Left">
-        <Button x:Name="LaunchGame" Content="Launch" HorizontalAlignment="Left" Height="49" Margin="56,445,0,0" VerticalAlignment="Top" Width="125" Click="Button_Click"/>
-        <CheckBox x:Name="Windowed" Content="Run Windowed" HorizontalAlignment="Left" Margin="196,469,0,0" VerticalAlignment="Top"/>
-        <Button x:Name="LaunchEditor" Content="Launch Level Editor" HorizontalAlignment="Left" Height="49" Margin="56,380,0,0" VerticalAlignment="Top" Width="125" Click="LaunchEditor_Click"/>
-        <Button x:Name="UploadLevels" Content="Upload level pack" HorizontalAlignment="Left" Height="49" Margin="56,314,0,0" VerticalAlignment="Top" Width="125" Click="UploadLevels_Click"/>
-        <DataGrid x:Name="LevelPackDataGrid" Width="570" Height="200"  SelectionMode="Single" Sorting="LevelPackDataGrid_Sorting" d:ItemsSource="{d:SampleData ItemCount=5}" AutoGenerateColumns="False" IsReadOnly="True" Margin="347,243,10,83" SelectionChanged="LevelPackDataGrid_SelectionChanged">
+        Title="Ruyn Launcher" Height="556" Width="789" Left="0" Top="0" Icon="/RüynTitleSmall.png">
+    <Grid Margin="0,0,0,0
+          " HorizontalAlignment="left" Width="952" Height="537.9">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="401*"/>
+            <ColumnDefinition Width="75*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="LaunchGame" Content="Launch Game" HorizontalAlignment="Left" Height="48" Margin="10,395,0,0" VerticalAlignment="Top" Width="169" Click="Button_Click"/>
+        <CheckBox x:Name="Windowed" Content="Run Windowed" HorizontalAlignment="Left" Margin="10,451,0,0" VerticalAlignment="Top"/>
+        <Button x:Name="LaunchEditor" Content="Launch Level Editor" HorizontalAlignment="Left" Height="48" Margin="10,342,0,0" VerticalAlignment="Top" Width="169" Click="LaunchEditor_Click"/>
+        <Button x:Name="UploadLevels" Content="Upload level pack" HorizontalAlignment="Left" Height="48" Margin="10,289,0,0" VerticalAlignment="Top" Width="169" Click="UploadLevels_Click"/>
+        <DataGrid x:Name="LevelPackDataGrid" Width="570"  SelectionMode="Single" Sorting="LevelPackDataGrid_Sorting" d:ItemsSource="{d:SampleData ItemCount=5}" AutoGenerateColumns="False" IsReadOnly="True" Margin="191,236,0,0" SelectionChanged="LevelPackDataGrid_SelectionChanged" Height="207" HorizontalAlignment="Left" VerticalAlignment="Top">
 
             <DataGrid.Columns>
                 <DataGridTextColumn Visibility="Hidden" Header="Id" Binding="{Binding Id}" Width="*"/>
@@ -24,12 +29,13 @@
                 <DataGridTextColumn Header="Download Count" Binding="{Binding DownloadCount}" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
-        <Label x:Name="LevelPackLabel" Content="Server level packs" HorizontalAlignment="Left" Margin="347,216,0,0" VerticalAlignment="Top" Width="116"/>
-        <Button x:Name="DownloadButton" Content="Download Pack" IsEnabled="False"  HorizontalAlignment="Left" Margin="347,443,0,0" VerticalAlignment="Top" Height="40" Click="DownloadButton_Click" Width="180"/>
-        <Label x:Name="DownloadedPack" Content="Local level packs" HorizontalAlignment="Left" Margin="347,47,0,0" VerticalAlignment="Top"/>
-        <ListBox x:Name="DownloadedLevelPacks" Height="135" Width="570" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="347,73,10,315" SelectionChanged="DownloadedLevelPacks_SelectionChanged"/>
-        <TextBox x:Name="SearchBox" HorizontalAlignment="Left" Margin="760,222,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="117" Height="21"/>
-        <Button x:Name="SearchButton" Content="Search" HorizontalAlignment="Left" Margin="877,222,0,0" VerticalAlignment="Top" Height="21" Click="SearchButton_Click"/>
-        <Button x:Name="NewLevelPack" Content="Create New Level Pack" HorizontalAlignment="Left" Margin="56,248,0,0" VerticalAlignment="Top" Width="125" Height="48" Click="Button_Click_1"/>
+        <Label x:Name="LevelPackLabel" Content="Server level packs" HorizontalAlignment="Left" Margin="191,206,0,0" VerticalAlignment="Top" Width="116"/>
+        <Button x:Name="DownloadButton" Content="Download Pack" IsEnabled="False"  HorizontalAlignment="Left" Margin="191,448,0,0" VerticalAlignment="Top" Height="40" Click="DownloadButton_Click" Width="570"/>
+        <Label x:Name="DownloadedPack" Content="Local level packs" HorizontalAlignment="Left" Margin="191,5,0,0" VerticalAlignment="Top"/>
+        <ListBox x:Name="DownloadedLevelPacks" Width="570" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="191,31,0,0" SelectionChanged="DownloadedLevelPacks_SelectionChanged" Height="166" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0"/>
+        <TextBox x:Name="SearchBox" HorizontalAlignment="Left" Margin="605,211,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="117" Height="21"/>
+        <Button x:Name="SearchButton" Content="Search" HorizontalAlignment="Left" Margin="722,211,0,0" VerticalAlignment="Top" Height="21" Click="SearchButton_Click"/>
+        <Button x:Name="NewLevelPack" Content="Create New Level Pack" HorizontalAlignment="Left" Margin="10,236,0,0" VerticalAlignment="Top" Width="169" Height="48" Click="Button_Click_1"/>
+        <Image HorizontalAlignment="Left" Height="169" Margin="10,28,0,0" VerticalAlignment="Top" Width="199" Source="/LargeIcon.png"/>
     </Grid>
 </Window>

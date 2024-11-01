@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="LargeIcon.png" />
+    <None Remove="RüynTitleSmall.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" ClassName="RuynServer">
       <SourceUri>http://localhost:5202/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
@@ -25,6 +30,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="LargeIcon.png" />
+    <Resource Include="RüynTitleSmall.png" />
   </ItemGroup>
 
 </Project>
