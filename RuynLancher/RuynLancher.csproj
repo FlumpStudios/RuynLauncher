@@ -11,6 +11,7 @@
     <None Remove="FlumpLogo.png" />
     <None Remove="LargeIcon.png" />
     <None Remove="RüynTitleSmall.png" />
+    <None Remove="Spinner.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,6 +38,7 @@
     <Resource Include="FlumpLogo.png" />
     <Resource Include="LargeIcon.png" />
     <Resource Include="RüynTitleSmall.png" />
+    <Resource Include="Spinner.png" />
   </ItemGroup>
 
 </Project>

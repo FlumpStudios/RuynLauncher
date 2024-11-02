@@ -198,8 +198,9 @@ namespace RuynLancher
 
         private async Task UpdateLevelPacks()
         {
-            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(_searchTerm, 0, 20, _currentFilter, _decending);
-            LevelPackDataGrid.ItemsSource = levelPacks.Select(x => new { x.Id, UploadDate = x.UploadDate.ToString()[..10], x.LevelPackName, x.Author, x.LevelCount, x.DownloadCount });
+           ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(_searchTerm, 0, 20, _currentFilter, _decending);
+           LevelPackDataGrid.ItemsSource = levelPacks.Select(x => new { x.Id, UploadDate = x.UploadDate.ToString()[..10], x.LevelPackName, x.Author, x.LevelCount, x.DownloadCount });
+            LoadingSpinner.Visibility = Visibility.Hidden;
         }
 
         private async void LevelPackDataGrid_Sorting(object sender, DataGridSortingEventArgs e)

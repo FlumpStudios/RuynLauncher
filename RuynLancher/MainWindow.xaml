@@ -46,6 +46,27 @@
                     <ListBox x:Name="DownloadedLevelPacks" Width="570" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,36,0,0" SelectionChanged="DownloadedLevelPacks_SelectionChanged" Height="166" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0"/>
                     <TextBox x:Name="SearchBox" HorizontalAlignment="Left" Margin="423,215,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="117" Height="21"/>
                     <Button x:Name="SearchButton" Content="Search" HorizontalAlignment="Left" Margin="540,215,0,0" VerticalAlignment="Top" Height="21" Click="SearchButton_Click"/>
+                    <Image x:Name="LoadingSpinner" HorizontalAlignment="Left" Height="100" Margin="216,282,0,0"
+       VerticalAlignment="Top" Width="100" Source="/Spinner.png">
+                        <!-- Set the RenderTransformOrigin to center the rotation around the image center -->
+                        <Image.RenderTransform>
+                            <RotateTransform x:Name="ImageRotateTransform" />
+                        </Image.RenderTransform>
+                        <Image.RenderTransformOrigin>0.5, 0.5</Image.RenderTransformOrigin>
+
+                        <!-- Add an EventTrigger to start rotation animation when the image loads -->
+                        <Image.Triggers>
+                            <EventTrigger RoutedEvent="Image.Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <!-- Animate the Angle property from 0 to 360 degrees -->
+                                        <DoubleAnimation Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+                                     From="0" To="360" Duration="0:0:2" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Image.Triggers>
+                    </Image>
 
 
                 </Grid>
