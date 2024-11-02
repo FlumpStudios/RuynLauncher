@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="FlumpLogo.png" />
     <None Remove="LargeIcon.png" />
     <None Remove="RüynTitleSmall.png" />
   </ItemGroup>
@@ -33,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="FlumpLogo.png" />
     <Resource Include="LargeIcon.png" />
     <Resource Include="RüynTitleSmall.png" />
   </ItemGroup>

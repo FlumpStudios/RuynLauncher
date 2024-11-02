@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         ResizeMode="NoResize"
-        Title="Ruyn Launcher" Height="595" Width="843" Left="0" Top="0" HorizontalAlignment="Left" VerticalAlignment="Top" Icon="/RüynTitleSmall.png">
+        Title="Ruyn Launcher" Height="595" Width="843" Left="0" Top="0" HorizontalAlignment="Left" VerticalAlignment="Top" Icon="/RüynTitleSmall.png" Background="Black">
     <Grid Margin="0,0,0,0
           " HorizontalAlignment="Left" Width="952" Height="574" VerticalAlignment="Top">
         <Grid.RowDefinitions>
@@ -20,7 +20,7 @@
             <ColumnDefinition Width="113*"/>
         </Grid.ColumnDefinitions>
         <Button x:Name="LaunchGame" Content="Launch Game" HorizontalAlignment="Left" Height="48" Margin="10,263,0,0" VerticalAlignment="Top" Width="203" Click="Button_Click" Grid.ColumnSpan="2"/>
-        <CheckBox x:Name="Windowed" Content="Run Windowed" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top" Height="15" Width="101"/>
+        <CheckBox x:Name="Windowed" Content="Run Windowed" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top" Height="15" Width="101" Foreground="#FFE4D1D1"/>
         <Button x:Name="LaunchEditor" Content="Launch Level Editor" HorizontalAlignment="Left" Height="48" Margin="10,316,0,0" VerticalAlignment="Top" Width="203" Click="LaunchEditor_Click" Grid.ColumnSpan="2"/>
         <Button x:Name="UploadLevels" Content="Upload level pack" HorizontalAlignment="Left" Height="48" Margin="10,422,0,0" VerticalAlignment="Top" Width="203" Click="UploadLevels_Click" Grid.ColumnSpan="2"/>
         <Button x:Name="NewLevelPack" Content="Create New Level Pack" HorizontalAlignment="Left" Margin="10,369,0,0" VerticalAlignment="Top" Width="203" Height="48" Click="Button_Click_1" Grid.ColumnSpan="2"/>
@@ -54,5 +54,6 @@
                 <Grid Background="#FFE5E5E5" Margin="0,0,-262,0"/>
             </TabItem>-->
         </TabControl>
+        <Image x:Name="FlumpLogo" HorizontalAlignment="Left" Height="73" Margin="13,475,0,0" VerticalAlignment="Top" Width="200" Source="/FlumpLogo.png" Stretch="Fill" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>
