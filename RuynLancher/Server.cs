@@ -14,7 +14,7 @@ namespace RuynLancher
                 var apikey = Security.GetApiKey();
                 var h = new HttpClient();
                 h.DefaultRequestHeaders.Add("X-Api-Key", apikey);
-                _server = new RuynServer("http://localhost:5202", h);
+                _server = new RuynServer("http://plinx-tech.co.uk", h);
             }
             return _server;
         }
