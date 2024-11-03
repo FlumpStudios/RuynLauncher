@@ -38,8 +38,23 @@
                             <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="*"/>
                             <DataGridTextColumn Header="Level Count" Binding="{Binding LevelCount}" Width="*"/>
                             <DataGridTextColumn Header="Download Count" Binding="{Binding DownloadCount}" Width="*" />
+                            <DataGridTextColumn Header="Rating" Binding="{Binding Ranking}" Width="*" />
+
+                            <DataGridTemplateColumn Header="Vote" Width="*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <!-- Upvote Button -->
+                                            <Button Content="👍" Width="40"  Click="UpvoteButton_Click"/>
+
+                                            <!-- Downvote Button -->
+                                            <Button Content="👎" Width="40"  Click="DownvoteButton_Click"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
-                    </DataGrid>
+                    </DataGrid> 
                     <Label x:Name="LevelPackLabel" Content="Server level packs" HorizontalAlignment="Left" Margin="10,211,0,0" VerticalAlignment="Top" Width="116"/>
                     <Button x:Name="DownloadButton" Content="Download Pack" IsEnabled="False"  HorizontalAlignment="Left" Margin="10,453,0,0" VerticalAlignment="Top" Height="51" Click="DownloadButton_Click" Width="570"/>
                     <Label x:Name="DownloadedPack" Content="Local level packs" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>

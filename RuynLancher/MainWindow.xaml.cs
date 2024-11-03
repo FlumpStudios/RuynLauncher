@@ -67,6 +67,39 @@ namespace RuynLancher
             UpdateAvailablePackList();
         }
 
+        private async Task RunUpvote(int id)
+        {
+            await Server.Get().UpvoteAsync(id);       
+        }
+
+        private async Task RunDownVote(int id)
+        {
+            await Server.Get().DownvoteAsync(id);
+        }
+
+        private async void UpvoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var f = e as dynamic;
+            var id = f.OriginalSource.DataContext.Id;
+            if (id is not null && id > 0)
+            { 
+                await RunUpvote(id);
+                await UpdateLevelPacks();
+            }
+            e.Handled = true;
+        }
+
+        private async void DownvoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            var f = e as dynamic;
+            var id = f.OriginalSource.DataContext.Id;
+            if (id is not null && id > 0)
+            {
+                await RunDownVote(id);
+                await UpdateLevelPacks();
+            }
+            e.Handled = true;
+        }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -137,6 +170,7 @@ namespace RuynLancher
 
         private void LevelPackDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
+            if(e.AddedItems.Count < 1) { return; }
             var data = e.AddedItems[0] as dynamic;
             int? id = data?.Id ?? -1;
 
@@ -198,9 +232,10 @@ namespace RuynLancher
 
         private async Task UpdateLevelPacks()
         {
+           LoadingSpinner.Visibility = Visibility.Visible;
            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(_searchTerm, 0, 20, _currentFilter, _decending);
-           LevelPackDataGrid.ItemsSource = levelPacks.Select(x => new { x.Id, UploadDate = x.UploadDate.ToString()[..10], x.LevelPackName, x.Author, x.LevelCount, x.DownloadCount });
-            LoadingSpinner.Visibility = Visibility.Hidden;
+           LevelPackDataGrid.ItemsSource = levelPacks.Select(x => new { x.Id, UploadDate = x.UploadDate.ToString()[..10], x.LevelPackName, x.Author, x.LevelCount, x.DownloadCount, x.Ranking });
+           LoadingSpinner.Visibility = Visibility.Hidden;
         }
 
         private async void LevelPackDataGrid_Sorting(object sender, DataGridSortingEventArgs e)

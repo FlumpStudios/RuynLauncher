@@ -111,8 +111,8 @@
           }
         },
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -156,7 +156,57 @@
             }
           }
         }
-      },
+      }
+    },
+    "/api/v1/LevelData/{id}/upvote": {
+      "post": {
+        "tags": [
+          "LevelData"
+        ],
+        "operationId": "Upvote",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/v1/LevelData/{id}/downvote": {
+      "post": {
+        "tags": [
+          "LevelData"
+        ],
+        "operationId": "Downvote",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/v1/LevelData/{id}/delete": {
       "post": {
         "tags": [
           "LevelData"
@@ -174,8 +224,30 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/v1/LevelData/deletebyname": {
+      "post": {
+        "tags": [
+          "LevelData"
+        ],
+        "operationId": "DeleteLevelPackByName",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
           }
         }
       }
@@ -231,7 +303,8 @@
           "author",
           "downloadCount",
           "levelCount",
-          "levelPackName"
+          "levelPackName",
+          "ranking"
         ],
         "type": "object",
         "properties": {
@@ -255,6 +328,10 @@
             "type": "integer",
             "format": "int32"
           },
+          "ranking": {
+            "type": "integer",
+            "format": "int32"
+          },
           "uploadDate": {
             "type": "string",
             "format": "date-time"
@@ -268,7 +345,8 @@
           "DownloadCount",
           "LevelCount",
           "name",
-          "author"
+          "author",
+          "ranking"
         ],
         "type": "string"
       }
