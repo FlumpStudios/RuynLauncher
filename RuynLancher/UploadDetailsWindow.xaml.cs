@@ -5,12 +5,10 @@ using System.Text.RegularExpressions;
 using System;
 using System.Windows;
 using Microsoft.Win32;
-using static RuynLancher.Constants;
-using System.Drawing.Printing;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Linq;
+using static RuynLancher.Constants;
 
 namespace RuynLancher
 {
@@ -124,7 +122,6 @@ namespace RuynLancher
 
             string zipFilePath = $"{LEVELS_FOLDER}\\levelPack.rpk";
 
-            // Call the method to zip files
             ZipFiles(validFileNames, zipFilePath);
 
             const int SQL_CONFLICT_ERROR_CODE = 409;
@@ -143,7 +140,7 @@ namespace RuynLancher
             {
                 if (ex.StatusCode == SQL_CONFLICT_ERROR_CODE)
                 {
-                    MessageBox.Show($"level pack '{LevelPackName}' already exists", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"{ex.Response}", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
                 { 
