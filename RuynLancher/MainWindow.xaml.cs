@@ -27,7 +27,7 @@ namespace RuynLancher
     /// </summary>
     public partial class MainWindow : Window
     {
-        const string ACTIVE_STRING = " - ACTIVE";
+        const string ACTIVE_STRING = " ✔";
         private static OrderByFilters _currentFilter = OrderByFilters.UploadedDate;
         private static string _searchTerm = string.Empty;
         private static string _currentSelection = string.Empty;
@@ -155,7 +155,7 @@ namespace RuynLancher
         private void ShowInputDialog_Click()
         {
             // Create and show the input dialog
-            UploadDetailsWindow inputDialog = new UploadDetailsWindow();
+            UploadDetailsWindow inputDialog = new UploadDetailsWindow(this);
             bool? result = inputDialog.ShowDialog();
         }
 
@@ -228,7 +228,7 @@ namespace RuynLancher
 
         }
 
-        private async Task UpdateLevelPacks()
+        public async Task UpdateLevelPacks()
         {
            LoadingSpinner.Visibility = Visibility.Visible;
            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(_searchTerm, 0, 20, _currentFilter, _decending);
@@ -320,7 +320,8 @@ namespace RuynLancher
             if (e.AddedItems.Count < 1) { return; }
             var selection = e.AddedItems[0] as dynamic;
             if (selection is not null)
-            {   if((selection as string).ToUpper().Contains("- ACTIVE")) { return; }
+            {   
+                if((selection as string).ToUpper().Contains(ACTIVE_STRING)) { return; }
 
                 _currentSelection = selection as string;
                 SaveData.ActivePack = _currentSelection;

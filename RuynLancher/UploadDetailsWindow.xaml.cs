@@ -20,10 +20,13 @@ namespace RuynLancher
     {
         public string LevelPackName = string.Empty;
         public string Author = string.Empty;
+        public readonly MainWindow _mainwindow;
 
-        public UploadDetailsWindow()
+        public UploadDetailsWindow(MainWindow mainWindow)
         {
             InitializeComponent();
+            LevelPackNameInput.Text = RuynLancher.SaveData.ActivePack;
+            _mainwindow = mainWindow;
         }
         private static bool IsValidLevelName(string? fileName)
         {
@@ -89,17 +92,17 @@ namespace RuynLancher
             LevelPackName = LevelPackNameInput.Text;
             Author = LevelPackAuthor.Text;
 
-            string folderName = string.Empty;
+            string folderName = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER, RuynLancher.SaveData.ActivePack.Replace(" ","_")) ;
 
-            OpenFolderDialog openFolderDialog = new OpenFolderDialog();
-            openFolderDialog.Title = "Select a folder";
+            //OpenFolderDialog openFolderDialog = new OpenFolderDialog();
+            //openFolderDialog.Title = "Select a folder";
 
-            var folderDialog = new OpenFolderDialog { };
+            //var folderDialog = new OpenFolderDialog { };
 
-            if (folderDialog.ShowDialog() == true)
-            {
-                folderName = folderDialog.FolderName;
-            }
+            //if (folderDialog.ShowDialog() == true)
+            //{
+            //    folderName = folderDialog.FolderName;
+            //}
 
             var fileNames = Directory.EnumerateFiles(folderName);
 
@@ -153,6 +156,7 @@ namespace RuynLancher
             MessageBox.Show($"File uploaded successfully", "Yay!", MessageBoxButton.OK, MessageBoxImage.Information);
             this.DialogResult = true;
             this.Close();
+            await _mainwindow.UpdateLevelPacks();
         }
 
         private void InputTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
