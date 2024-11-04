@@ -7,14 +7,11 @@ using System.Windows;
 using System.IO.Compression;
 using static RuynLancher.Constants;
 using Microsoft.VisualBasic;
-
 using System.Windows.Controls;
 using System.Linq;
-using System.Text.RegularExpressions;
-using System.Windows.Input;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
-using System.Drawing.Printing;
+using static RuynLancher.UserUtils;
+
 
 namespace RuynLancher
 {
@@ -34,12 +31,14 @@ namespace RuynLancher
         private static OrderByFilters _currentFilter = OrderByFilters.UploadedDate;
         private static string _searchTerm = string.Empty;
         private static string _currentSelection = string.Empty;
-        private static bool _decending = true;
+        private static bool _decending = true;        
 
         public MainWindow()
         {
             InitializeComponent();
         }
+
+        
 
         private void UpdateAvailablePackList()
         {
@@ -69,12 +68,12 @@ namespace RuynLancher
 
         private async Task RunUpvote(int id)
         {
-            await Server.Get().UpvoteAsync(id);       
+            await Server.Get().UpvoteAsync(id, GetUserId());       
         }
 
         private async Task RunDownVote(int id)
         {
-            await Server.Get().DownvoteAsync(id);
+            await Server.Get().DownvoteAsync(id, GetUserId());
         }
 
         private async void UpvoteButton_Click(object sender, RoutedEventArgs e)
@@ -165,8 +164,7 @@ namespace RuynLancher
             ShowInputDialog_Click();
         }
 
-        private static int _selectedId = -1;
-        private object memoryStream;
+        private static int _selectedId = -1;        
 
         private void LevelPackDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {

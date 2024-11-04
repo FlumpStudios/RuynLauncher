@@ -133,7 +133,8 @@ namespace RuynLancher
                     LevelCount = levelCount,
                     UploadDate = DateTime.Now,
                     FileData = File.ReadAllBytes(zipFilePath),
-                    LevelPackName = LevelPackName
+                    LevelPackName = LevelPackName,
+                    ClientId = UserUtils.GetUserId()
                 });
             }
             catch (ApiException ex)
