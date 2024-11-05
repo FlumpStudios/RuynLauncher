@@ -6,6 +6,8 @@ namespace RuynLancher
         public const string SERVER_LOCATION = "https://levelserver.ruyn.co.uk";
         public const string K = "MtiDqKdlsswFXVI5XrQNFZZu2Me97EVr";
         public const string EDITOR_NAME = "NekoNeo";
+        public const string TWO_D_EDITOR_NAME = "NekoBuilder";
+
         public const string EXE_NAME = "Ruyn";
         public const string SETTINGS_SAVE_FILE_NAME = "launcher_Settings.dat";
 #if DEBUG

@@ -152,6 +152,19 @@ namespace RuynLancher
             });
         }
 
+        private void Launch2DEditor_Click(object sender, RoutedEventArgs e)
+        {
+            if (!CheckForActiveLevelBack()) { return; }
+
+            Environment.CurrentDirectory = GAME_FILE_LOCATION;
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = $"{GAME_FILE_LOCATION}\\{TWO_D_EDITOR_NAME}.exe",
+                WorkingDirectory = GAME_FILE_LOCATION,
+                Arguments = $" {SaveData.ActivePack.Replace(" ", "_")}"
+            });
+        }
+
         private void ShowInputDialog_Click()
         {
             // Create and show the input dialog

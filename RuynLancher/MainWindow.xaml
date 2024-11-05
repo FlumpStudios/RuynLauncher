@@ -19,17 +19,18 @@
             <ColumnDefinition Width="648*"/>
             <ColumnDefinition Width="113*"/>
         </Grid.ColumnDefinitions>
-        <Button x:Name="LaunchGame" Content="Launch Game" HorizontalAlignment="Left" Height="48" Margin="10,263,0,0" VerticalAlignment="Top" Width="203" Click="Button_Click" Grid.ColumnSpan="2"/>
+        <Button x:Name="LaunchGame" Content="Launch Game!" HorizontalAlignment="Left" Height="55" Margin="10,270,0,0" VerticalAlignment="Top" Width="203" Click="Button_Click" Grid.ColumnSpan="2"/>
         <CheckBox x:Name="Windowed" Content="Run Windowed" HorizontalAlignment="Left" Margin="10,244,0,0" VerticalAlignment="Top" Height="15" Width="101" Foreground="#FFE4D1D1"/>
-        <Button x:Name="LaunchEditor" Content="Launch Level Editor" HorizontalAlignment="Left" Height="48" Margin="10,316,0,0" VerticalAlignment="Top" Width="203" Click="LaunchEditor_Click" Grid.ColumnSpan="2"/>
-        <Button x:Name="UploadLevels" Content="Upload level pack" HorizontalAlignment="Left" Height="48" Margin="10,422,0,0" VerticalAlignment="Top" Width="203" Click="UploadLevels_Click" Grid.ColumnSpan="2"/>
-        <Button x:Name="NewLevelPack" Content="Create New Level Pack" HorizontalAlignment="Left" Margin="10,369,0,0" VerticalAlignment="Top" Width="203" Height="48" Click="Button_Click_1" Grid.ColumnSpan="2"/>
+        <Button x:Name="LaunchEditor" Content="Launch 3D Level Editor" HorizontalAlignment="Left" Height="55" Margin="10,325,0,0" VerticalAlignment="Top" Width="203" Click="LaunchEditor_Click" Grid.ColumnSpan="2"/>
+        <Button x:Name="UploadLevels" Content="Upload level pack" HorizontalAlignment="Left" Height="55" Margin="10,490,0,0" VerticalAlignment="Top" Width="203" Click="UploadLevels_Click" Grid.ColumnSpan="2"/>
+        <Button x:Name="NewLevelPack" Content="Create New Level Pack" HorizontalAlignment="Left" Margin="10,435,0,0" VerticalAlignment="Top" Width="203" Height="55" Click="Button_Click_1" Grid.ColumnSpan="2"/>
+        <Button x:Name="Launch2DEditor" Content="Launch 2D Level Editor" HorizontalAlignment="Left" Height="55" Margin="10,380,0,0" VerticalAlignment="Top" Width="203" Click="Launch2DEditor_Click" Grid.ColumnSpan="2"/>
         <Image HorizontalAlignment="Left" Height="207" Margin="10,24,0,0" VerticalAlignment="Top" Width="203" Source="/LargeIcon.png" Stretch="UniformToFill" Grid.ColumnSpan="2"/>
-        <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="600" Height="550" Margin="27,0,0,0" RenderTransformOrigin="0.482,0.496" Grid.Column="1">
+        <TabControl HorizontalAlignment="Left" VerticalAlignment="Top" Width="600" Height="545" Margin="27,0,0,0" RenderTransformOrigin="0.482,0.496" Grid.Column="1">
             <TabItem Header="Level Packs" Width="75" Height="21" HorizontalAlignment="Left" VerticalAlignment="Top">
                 <Grid Background="#FFE5E5E5" HorizontalAlignment="Left" Width="600" Height="516" VerticalAlignment="Top">
 
-                    <DataGrid x:Name="LevelPackDataGrid" Width="570"  SelectionMode="Single" Sorting="LevelPackDataGrid_Sorting" d:ItemsSource="{d:SampleData ItemCount=5}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,241,0,0" SelectionChanged="LevelPackDataGrid_SelectionChanged" Height="207" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <DataGrid x:Name="LevelPackDataGrid" Width="570"  SelectionMode="Single" Sorting="LevelPackDataGrid_Sorting" d:ItemsSource="{d:SampleData ItemCount=5}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,242,0,0" SelectionChanged="LevelPackDataGrid_SelectionChanged" Height="206" HorizontalAlignment="Left" VerticalAlignment="Top">
 
                         <DataGrid.Columns>
                             <DataGridTextColumn Visibility="Hidden" Header="Id" Binding="{Binding Id}" Width="*"/>
@@ -54,7 +55,7 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
-                    </DataGrid> 
+                    </DataGrid>
                     <Label x:Name="LevelPackLabel" Content="Server level packs" HorizontalAlignment="Left" Margin="10,211,0,0" VerticalAlignment="Top" Width="116"/>
                     <Button x:Name="DownloadButton" Content="Download Pack" IsEnabled="False"  HorizontalAlignment="Left" Margin="10,453,0,0" VerticalAlignment="Top" Height="51" Click="DownloadButton_Click" Width="570"/>
                     <Label x:Name="DownloadedPack" Content="Local level packs" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
@@ -90,6 +91,6 @@
                 <Grid Background="#FFE5E5E5" Margin="0,0,-262,0"/>
             </TabItem>-->
         </TabControl>
-        <Image x:Name="FlumpLogo" HorizontalAlignment="Left" Height="73" Margin="13,475,0,0" VerticalAlignment="Top" Width="200" Source="/FlumpLogo.png" Stretch="Fill" Grid.ColumnSpan="2"/>
+
     </Grid>
 </Window>
