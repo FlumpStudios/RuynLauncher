@@ -361,11 +361,10 @@ namespace RuynLancher
 
         private void LoadSettings()
         {
-
-            if(File.Exists(SETTINGS_SAVE_FILE_NAME))
-            { 
-                var saveData = File.ReadAllBytes(SETTINGS_SAVE_FILE_NAME);
-
+            string path = Path.Combine(GAME_FILE_LOCATION, SETTINGS_SAVE_FILE_NAME);
+            if(File.Exists(path))
+            {
+                var saveData = File.ReadAllBytes(path);
                 using var memoryStream = new MemoryStream(saveData);
                 using var reader = new BinaryReader(memoryStream, Encoding.UTF8, true);
                 SaveData.ActivePack = reader.ReadString();
@@ -375,6 +374,7 @@ namespace RuynLancher
         
         private void SaveSettings()
         {
+            if(!Directory.Exists(GAME_FILE_LOCATION)) { return; }
             using var memoryStream = new MemoryStream();
 
             using var writer = new BinaryWriter(memoryStream, Encoding.UTF8, true);
