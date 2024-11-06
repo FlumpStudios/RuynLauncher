@@ -1,4 +1,7 @@
 ﻿
+using System;
+using System.IO;
+
 namespace RuynLancher
 {
     public static class Constants
@@ -11,12 +14,21 @@ namespace RuynLancher
         public const string EXE_NAME = "Ruyn";
         public const string SETTINGS_SAVE_FILE_NAME = "launcher_Settings.dat";
 #if DEBUG
-        public const string LEVELS_FOLDER = @"c:\projects\NekoEngine\Levels";
-        public const string GAME_FILE_LOCATION = @"c:\projects\NekoEngine";
+        public const string LEVELS_FOLDER = @"c:\projects\NekoEngine\GameData\Levels";
+        public const string GAME_FILE_LOCATION = @"c:\projects\NekoEngine\GameData";
 
 #else
-        public const string LEVELS_FOLDER = @"\Levels";
-        public const string GAME_FILE_LOCATION = @".\";
+
+        public const string LEVELS_FOLDER = @"GameData\Levels";
+        public static string? GAME_FILE_LOCATION = "GameData";
+
+static Constants()
+        {
+            string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string gameDataPath = Path.Combine(exeDirectory, "GameData");
+            GAME_FILE_LOCATION = gameDataPath;
+        }
+
 #endif
     }
 }
