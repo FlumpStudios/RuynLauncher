@@ -5,17 +5,16 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.IO.Compression;
-using static RuynLancher.Constants;
 using Microsoft.VisualBasic;
 using System.Windows.Controls;
 using System.Linq;
 using System.Text;
+using static RuynLancher.Constants;
 using static RuynLancher.UserUtils;
-
+using System.Windows.Input;
 
 namespace RuynLancher
 {
-
     public static class SaveData
     {
         public static string ActivePack = string.Empty;
@@ -38,14 +37,13 @@ namespace RuynLancher
             InitializeComponent();
         }
 
-        
-
         private void UpdateAvailablePackList()
         {
-            if (!Directory.Exists(LEVELS_FOLDER)) { return; }
+            string path = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER);
+            if (!Directory.Exists(path)) { return; }
 
             DownloadedLevelPacks.Items.Clear();
-            foreach (var levelpack in Directory.GetDirectories(LEVELS_FOLDER))
+            foreach (var levelpack in Directory.GetDirectories(path))
             {
                 string fileName = Path.GetFileName(levelpack).Replace("_", " ");
                 
@@ -88,6 +86,63 @@ namespace RuynLancher
             e.Handled = true;
         }
 
+        private void DownloadedLevelPacks_KeyDown(object sender, KeyEventArgs e)
+        {   
+            string folderPath = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER, SaveData.ActivePack).Replace(" ", "_");
+            if (e.Key == Key.F2)
+            {   
+                string input = Interaction.InputBox($"Please enter the new name for {SaveData.ActivePack}:", "Rename your level pack", "");
+                if (input.Length > 50)
+                {
+                    MessageBox.Show($"Exceeded max pack name of 50 characters", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else if (input.Length < 1)
+                {
+                    MessageBox.Show($"Please enter a valid name", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+                else 
+                { 
+                    try 
+                    {
+                        string newPath = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER, input.Replace(" ", "_"));
+                        SaveData.ActivePack = input;
+                        Directory.Move(folderPath, newPath);
+                        UpdateAvailablePackList();
+                    }
+                    catch
+                    {
+                        MessageBox.Show($"Unable to rename level pack", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
+            else if (e.Key == Key.Delete)
+            {
+                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {SaveData.ActivePack} and all its levels??", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                if (result == MessageBoxResult.Yes)
+                {
+                    // TODO: These string replaces are in too many places now, need to move to a method
+                    try
+                    {
+                        foreach (var file in Directory.GetFiles(folderPath))
+                        {
+                            File.Delete(file);
+                        }
+
+                        Directory.Delete(folderPath);
+                        MessageBox.Show($"Pack deleted", "Done!", MessageBoxButton.OK, MessageBoxImage.Information);
+                        SaveData.ActivePack = string.Empty;
+                        UpdateAvailablePackList();
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show($"Unable to delete level pack", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }   
+                }
+            }
+            
+        }
+
         private async void DownvoteButton_Click(object sender, RoutedEventArgs e)
         {
             var f = e as dynamic;
@@ -122,7 +177,7 @@ namespace RuynLancher
             Process.Start(new ProcessStartInfo
             {
                 FileName = $"{GAME_FILE_LOCATION}\\{EXE_NAME}.exe",
-                WorkingDirectory = GAME_FILE_LOCATION,
+               // WorkingDirectory = GAME_FILE_LOCATION,
                
                 Arguments = args
             });
@@ -147,7 +202,7 @@ namespace RuynLancher
             Process.Start(new ProcessStartInfo
             {
                 FileName = $"{GAME_FILE_LOCATION}\\{EDITOR_NAME}.exe",
-                WorkingDirectory = GAME_FILE_LOCATION,
+                // WorkingDirectory = GAME_FILE_LOCATION,
                 Arguments = $" { SaveData.ActivePack.Replace(" ", "_")}" 
             });
         }
@@ -160,7 +215,7 @@ namespace RuynLancher
             Process.Start(new ProcessStartInfo
             {
                 FileName = $"{GAME_FILE_LOCATION}\\{TWO_D_EDITOR_NAME}.exe",
-                WorkingDirectory = GAME_FILE_LOCATION,
+               // WorkingDirectory = GAME_FILE_LOCATION,
                 Arguments = $" {SaveData.ActivePack.Replace(" ", "_")}"
             });
         }
@@ -325,7 +380,7 @@ namespace RuynLancher
             using var writer = new BinaryWriter(memoryStream, Encoding.UTF8, true);
             writer.Write(SaveData.ActivePack);
             var bd = memoryStream.ToArray();
-            File.WriteAllBytes(SETTINGS_SAVE_FILE_NAME, bd);
+            File.WriteAllBytes(Path.Combine(GAME_FILE_LOCATION, SETTINGS_SAVE_FILE_NAME), bd);
         }
 
         private void DownloadedLevelPacks_SelectionChanged(object sender, SelectionChangedEventArgs e)

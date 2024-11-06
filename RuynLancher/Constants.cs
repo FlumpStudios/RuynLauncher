@@ -19,14 +19,15 @@ namespace RuynLancher
 
 #else
 
-        public const string LEVELS_FOLDER = @"GameData\Levels";
-        public static string? GAME_FILE_LOCATION = "GameData";
+        public const string LEVELS_FOLDER = "Levels";
+        public static string GAME_FILE_LOCATION = "GameData";
 
 static Constants()
         {
             string exeDirectory = AppDomain.CurrentDomain.BaseDirectory;
             string gameDataPath = Path.Combine(exeDirectory, "GameData");
             GAME_FILE_LOCATION = gameDataPath;
+            Environment.CurrentDirectory = Constants.GAME_FILE_LOCATION;
         }
 
 #endif
