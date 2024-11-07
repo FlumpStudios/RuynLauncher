@@ -282,7 +282,7 @@ namespace RuynLancher
                 }
                 File.Delete(fullPath);
                 UpdateAvailablePackList();
-                MessageBox.Show($"Level pack downloaded!", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Level pack downloaded!", "Yay!", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (ApiException ex)
             {
