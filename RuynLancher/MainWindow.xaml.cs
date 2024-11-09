@@ -64,23 +64,23 @@ namespace RuynLancher
             UpdateAvailablePackList();
         }
 
-        private async Task RunUpvote(int id)
+        private async Task RunUpvote(string levelPackName)
         {
-            await Server.Get().UpvoteAsync(id, GetUserId());       
+            await Server.Get().UpvoteAsync(levelPackName, GetUserId());       
         }
 
-        private async Task RunDownVote(int id)
+        private async Task RunDownVote(string levelPackName)
         {
-            await Server.Get().DownvoteAsync(id, GetUserId());
+            await Server.Get().DownvoteAsync(levelPackName, GetUserId());
         }
 
         private async void UpvoteButton_Click(object sender, RoutedEventArgs e)
         {
             var f = e as dynamic;
-            var id = f.OriginalSource.DataContext.Id;
-            if (id is not null && id > 0)
+            var levelPackName = f.OriginalSource.DataContext.LevelPackName;
+            if (levelPackName is not null)
             { 
-                await RunUpvote(id);
+                await RunUpvote(levelPackName);
                 await UpdateLevelPacks();
             }
             e.Handled = true;
@@ -146,10 +146,10 @@ namespace RuynLancher
         private async void DownvoteButton_Click(object sender, RoutedEventArgs e)
         {
             var f = e as dynamic;
-            var id = f.OriginalSource.DataContext.Id;
-            if (id is not null && id > 0)
+            var levelPackName = f.OriginalSource.DataContext.LevelPackName;
+            if (levelPackName is not null)
             {
-                await RunDownVote(id);
+                await RunDownVote(levelPackName);
                 await UpdateLevelPacks();
             }
             e.Handled = true;
@@ -232,27 +232,27 @@ namespace RuynLancher
             ShowInputDialog_Click();
         }
 
-        private static int _selectedId = -1;        
+        private static string? _selectedPackName = null;        
 
         private void LevelPackDataGrid_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if(e.AddedItems.Count < 1) { return; }
             var data = e.AddedItems[0] as dynamic;
-            int? id = data?.Id ?? -1;
+            string? levelPackName = data?.LevelPackName;
 
-            if (id is not null && id > -1)
+            if (levelPackName is not null)
             {
-                _selectedId = id ?? -1;
+                _selectedPackName = levelPackName;
             }
 
-            DownloadButton.IsEnabled = id > -1;
+            DownloadButton.IsEnabled = levelPackName is not null;
         }
 
-        private async Task DownloadPack(int id)
+        private async Task DownloadPack(string levelPackName3)
         {
             try
             {
-                LevelData downloadedPack = await Server.Get().GetLevelPackByIdAsync(id);
+                LevelData downloadedPack = await Server.Get().GetLevelPackByNameAsync(levelPackName3);
                 if (downloadedPack?.LevelPackName is null) { return; }
 
                 string directory = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER, downloadedPack.LevelPackName).Replace(" ","_");
@@ -300,7 +300,7 @@ namespace RuynLancher
         {
            LoadingSpinner.Visibility = Visibility.Visible;
            ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(_searchTerm, 0, 20, _currentFilter, _decending);
-           LevelPackDataGrid.ItemsSource = levelPacks.Select(x => new { x.Id, UploadDate = x.UploadDate.ToString()[..10], x.LevelPackName, x.Author, x.LevelCount, x.DownloadCount, x.Ranking });
+           LevelPackDataGrid.ItemsSource = levelPacks.Select(x => new { x.LevelPackName, UploadDate = x.UploadDate.ToString()[..10],x.Author, x.LevelCount, x.DownloadCount, x.Ranking });
            LoadingSpinner.Visibility = Visibility.Hidden;
         }
 
@@ -353,9 +353,9 @@ namespace RuynLancher
 
         private async void DownloadButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_selectedId > -1)
+            if (_selectedPackName is not null)
             { 
-                await DownloadPack(_selectedId);
+                await DownloadPack(_selectedPackName);
             }
         }
 

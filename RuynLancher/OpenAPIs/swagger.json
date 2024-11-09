@@ -5,6 +5,175 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/v1/Leaderboard": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "operationId": "GetLeaderboards",
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "take",
+            "in": "query",
+            "schema": {
+              "maximum": 50,
+              "minimum": 0,
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Leaderboard"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Leaderboard"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Leaderboard"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Leaderboard/rank": {
+      "get": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "operationId": "GetRank",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "levelPackName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "levelNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/Leaderboard/postscore": {
+      "post": {
+        "tags": [
+          "Leaderboard"
+        ],
+        "operationId": "PostScore",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaderboard"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaderboard"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Leaderboard"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/LevelData": {
       "get": {
         "tags": [
@@ -117,20 +286,19 @@
         }
       }
     },
-    "/api/v1/LevelData/{id}": {
+    "/api/v1/LevelData/{levelPackName}": {
       "get": {
         "tags": [
           "LevelData"
         ],
-        "operationId": "GetLevelPackById",
+        "operationId": "GetLevelPackByName",
         "parameters": [
           {
-            "name": "id",
+            "name": "levelPackName",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -158,7 +326,7 @@
         }
       }
     },
-    "/api/v1/LevelData/{id}/upvote": {
+    "/api/v1/LevelData/{levelPackName}/upvote": {
       "post": {
         "tags": [
           "LevelData"
@@ -166,12 +334,11 @@
         "operationId": "Upvote",
         "parameters": [
           {
-            "name": "id",
+            "name": "levelPackName",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -201,7 +368,7 @@
         }
       }
     },
-    "/api/v1/LevelData/{id}/downvote": {
+    "/api/v1/LevelData/{levelPackName}/downvote": {
       "post": {
         "tags": [
           "LevelData"
@@ -209,12 +376,11 @@
         "operationId": "Downvote",
         "parameters": [
           {
-            "name": "id",
+            "name": "levelPackName",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
@@ -244,36 +410,12 @@
         }
       }
     },
-    "/api/v1/LevelData/{id}/delete": {
+    "/api/v1/LevelData/delete": {
       "post": {
         "tags": [
           "LevelData"
         ],
-        "operationId": "DeleteLevelPack",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/api/v1/LevelData/deletebyname": {
-      "post": {
-        "tags": [
-          "LevelData"
-        ],
-        "operationId": "DeleteLevelPackByName",
+        "operationId": "Delete",
         "parameters": [
           {
             "name": "name",
@@ -293,9 +435,42 @@
   },
   "components": {
     "schemas": {
+      "Leaderboard": {
+        "required": [
+          "clientId",
+          "levelPackName"
+        ],
+        "type": "object",
+        "properties": {
+          "userName": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "clientId": {
+            "maxLength": 100,
+            "type": "string",
+            "nullable": true
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "levelPackName": {
+            "type": "string",
+            "nullable": true
+          },
+          "levelNumber": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "LevelData": {
         "required": [
           "author",
+          "clientId",
           "downloadCount",
           "fileData",
           "levelCount",
@@ -303,18 +478,14 @@
         ],
         "type": "object",
         "properties": {
-          "levelDataId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "clientId": {
-            "type": "string",
-            "nullable": true
-          },
           "levelPackName": {
             "maxLength": 50,
             "minLength": 1,
             "type": "string"
+          },
+          "clientId": {
+            "type": "string",
+            "nullable": true
           },
           "author": {
             "maxLength": 50,

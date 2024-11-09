@@ -33,9 +33,8 @@
                     <DataGrid x:Name="LevelPackDataGrid" Width="570"  SelectionMode="Single" Sorting="LevelPackDataGrid_Sorting" d:ItemsSource="{d:SampleData ItemCount=5}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,242,0,0" SelectionChanged="LevelPackDataGrid_SelectionChanged" Height="206" HorizontalAlignment="Left" VerticalAlignment="Top">
 
                         <DataGrid.Columns>
-                            <DataGridTextColumn Visibility="Hidden" Header="Id" Binding="{Binding Id}" Width="*"/>
-                            <DataGridTextColumn Header="Upload Date" Binding="{Binding UploadDate}" Width="*"/>
                             <DataGridTextColumn Header="Name" Binding="{Binding LevelPackName}" Width="*"/>
+                            <DataGridTextColumn Header="Upload Date" Binding="{Binding UploadDate}" Width="*"/>
                             <DataGridTextColumn Header="Author" Binding="{Binding Author}" Width="*"/>
                             <DataGridTextColumn Header="Level Count" Binding="{Binding LevelCount}" Width="*"/>
                             <DataGridTextColumn Header="Download Count" Binding="{Binding DownloadCount}" Width="*" />
