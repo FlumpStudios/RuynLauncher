@@ -18,6 +18,7 @@ namespace RuynLancher
     public static class SaveData
     {
         public static string ActivePack = string.Empty;
+        public static string DisplayName = string.Empty;
     }
 
 
@@ -26,6 +27,7 @@ namespace RuynLancher
     /// </summary>
     public partial class MainWindow : Window
     {
+        const int MAX_INPUT_LENGTH = 50;
         const string ACTIVE_STRING = " ✔";
         private static OrderByFilters _currentFilter = OrderByFilters.UploadedDate;
         private static string _searchTerm = string.Empty;
@@ -60,6 +62,7 @@ namespace RuynLancher
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadSettings();
+            DisplayNameTextBox.Text = SaveData.DisplayName;
             await UpdateLevelPacks();
             UpdateAvailablePackList();
         }
@@ -92,9 +95,9 @@ namespace RuynLancher
             if (e.Key == Key.F2)
             {   
                 string input = Interaction.InputBox($"Please enter the new name for {SaveData.ActivePack}:", "Rename your level pack", "");
-                if (input.Length > 50)
+                if (input.Length > MAX_INPUT_LENGTH)
                 {
-                    MessageBox.Show($"Exceeded max pack name of 50 characters", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Exceeded max pack name of {MAX_INPUT_LENGTH} characters", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else if (input.Length < 1)
                 {
@@ -362,14 +365,18 @@ namespace RuynLancher
         private void LoadSettings()
         {
             string path = Path.Combine(GAME_FILE_LOCATION, SETTINGS_SAVE_FILE_NAME);
-            if(File.Exists(path))
+            if (File.Exists(path))
             {
                 var saveData = File.ReadAllBytes(path);
                 using var memoryStream = new MemoryStream(saveData);
                 using var reader = new BinaryReader(memoryStream, Encoding.UTF8, true);
                 SaveData.ActivePack = reader.ReadString();
+                SaveData.DisplayName = reader.ReadString();
             }
-
+            else
+            {
+                UpdateDisplayName("Welcome to Ruyn! Please enter a display name");
+            }
         }
         
         private void SaveSettings()
@@ -379,6 +386,7 @@ namespace RuynLancher
 
             using var writer = new BinaryWriter(memoryStream, Encoding.UTF8, true);
             writer.Write(SaveData.ActivePack);
+            writer.Write(SaveData.DisplayName);
             var bd = memoryStream.ToArray();
             File.WriteAllBytes(Path.Combine(GAME_FILE_LOCATION, SETTINGS_SAVE_FILE_NAME), bd);
         }
@@ -418,9 +426,9 @@ namespace RuynLancher
                 return;
             }
 
-            if (input.Length >= 50)
+            if (input.Length >= MAX_INPUT_LENGTH)
             {
-                MessageBox.Show($"Your level pack name must be under 50 characters", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Your level pack name must be under {MAX_INPUT_LENGTH} characters", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -438,6 +446,36 @@ namespace RuynLancher
             MessageBox.Show($"New Level Pack Created!", "Yay!", MessageBoxButton.OK, MessageBoxImage.Information);
             SaveData.ActivePack = input;
             UpdateAvailablePackList();
+        }
+
+        private void UpdateDisplayName(string message)
+        {
+            while (true)
+            {
+                string input = Interaction.InputBox(message, "Update display name", "");
+                if (input.Length <= MAX_INPUT_LENGTH)
+                {
+                    if (string.IsNullOrEmpty(input))
+                    {
+                        input = "Anonymous";
+                    }
+                    SaveData.DisplayName = input;
+                    break;
+                }
+                else
+                {
+                    MessageBox.Show($"Display name cannot exceed {MAX_INPUT_LENGTH} characters. Please try again.");
+                }
+            }
+            
+            
+            DisplayNameTextBox.Text = SaveData.DisplayName;
+            SaveSettings();
+        }
+
+        private void EditDisplayName_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateDisplayName("Please enter your new Display Name");
         }
     }
 }

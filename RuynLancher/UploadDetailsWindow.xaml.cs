@@ -26,6 +26,7 @@ namespace RuynLancher
         {
             InitializeComponent();
             LevelPackNameInput.Text = RuynLancher.SaveData.ActivePack;
+            LevelPackAuthor.Text = RuynLancher.SaveData.DisplayName;
             _mainwindow = mainWindow;
         }
         private static bool IsValidLevelName(string? fileName)
@@ -181,6 +182,11 @@ namespace RuynLancher
             {
                 SubmitButton.IsEnabled = false;
             }
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

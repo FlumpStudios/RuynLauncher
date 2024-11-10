@@ -6,7 +6,7 @@ namespace RuynLancher
 {
     public static class Constants
     {
-        public const string SERVER_LOCATION = "https://localhost:7229"; // "https://levelserver.ruyn.co.uk";
+        public const string SERVER_LOCATION = "https://levelserver.ruyn.co.uk";
         public const string K = "MtiDqKdlsswFXVI5XrQNFZZu2Me97EVr";
         public const string EDITOR_NAME = "NekoNeo";
         public const string TWO_D_EDITOR_NAME = "NekoBuilder";
