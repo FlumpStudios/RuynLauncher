@@ -177,6 +177,10 @@ namespace RuynLancher
 
             args += $" -p {SaveData.ActivePack.Replace(" ","_")}";
 
+            args += $" -u {SaveData.DisplayName}";
+
+            args += $" -c {GetUserId()}";
+
             Process.Start(new ProcessStartInfo
             {
                 FileName = $"{GAME_FILE_LOCATION}\\{EXE_NAME}.exe",
