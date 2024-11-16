@@ -73,13 +73,17 @@ namespace RuynLancher
             {
                 if (fs != null)
                 {
+                    if (fs.Length != LEVEL_SIZE_FOR_VALIDATION)
+                    {
+                        return false;
+                    }
                     try
                     {
                         Level l = new();
                         l.Deserialise(new BinaryReader(fs));
                         return true;
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         return false;
                     }
