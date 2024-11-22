@@ -4,7 +4,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System;
 using System.Windows;
-using Microsoft.Win32;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Linq;
@@ -44,7 +43,7 @@ namespace RuynLancher
         {
             if (File.Exists(zipFilePath))
             {
-                File.Delete(zipFilePath); // Delete if exists
+                File.Delete(zipFilePath);
             }
 
             using (FileStream zipToOpen = new FileStream(zipFilePath, FileMode.Create))
@@ -65,8 +64,13 @@ namespace RuynLancher
             }
         }
 
-        private static bool ValidateLevel(string filePath)
+
+        private static bool ValidateLevelName(string name)
         {
+            return Regex.IsMatch(name, @"^LEVEL([0-8][0-9]|9[0-8])$");
+        }
+        private static bool ValidateLevel(string filePath)
+        {         
             if (!File.Exists(filePath)) { return false; }
 
             using (FileStream fs = new(filePath, FileMode.Open))
@@ -81,6 +85,26 @@ namespace RuynLancher
                     {
                         Level l = new();
                         l.Deserialise(new BinaryReader(fs));
+                        if (l.stepSize > Level.MAX_STEP_SIZE)
+                        {
+                            return false;
+                        }
+                        if (l.ceilHeight > Level.MAX_WALL_SIZE)
+                        {
+                            return false;
+                        }
+                        if (l.floorHeight > Level.MAX_WALL_SIZE)
+                        {
+                            return false;
+                        }
+                        if (l.PlayerStart[0] > 64 || l.PlayerStart[1] > 64)
+                        {
+                            return false;
+                        }
+                        if (l.doorLevitation > Level.MAX_WALL_SIZE)
+                        { 
+                            return false;
+                        }                        
                         return true;
                     }
                     catch
@@ -98,17 +122,7 @@ namespace RuynLancher
             Author = LevelPackAuthor.Text;
 
             string folderName = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER, RuynLancher.SaveData.ActivePack.Replace(" ","_")) ;
-
-            //OpenFolderDialog openFolderDialog = new OpenFolderDialog();
-            //openFolderDialog.Title = "Select a folder";
-
-            //var folderDialog = new OpenFolderDialog { };
-
-            //if (folderDialog.ShowDialog() == true)
-            //{
-            //    folderName = folderDialog.FolderName;
-            //}
-
+            
             var fileNames = Directory.EnumerateFiles(folderName);
 
             if (!fileNames.Any())
@@ -121,7 +135,9 @@ namespace RuynLancher
             int levelCount = 0;
             foreach (var file in fileNames)
             {
-                if (IsValidLevelName(Path.GetFileName(file)) && ValidateLevel(file))
+                if (IsValidLevelName(Path.GetFileName(file)) 
+                    && ValidateLevel(file) 
+                    && ValidateLevelName(file))
                 {
                     validFileNames.Add(file);
                     levelCount++;
@@ -158,7 +174,7 @@ namespace RuynLancher
                 return;
             }
 
-            MessageBox.Show($"File uploaded successfully", "Yay!", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show($"Uploaded level pack {LevelPackName} with {levelCount} levels ", "Yay!", MessageBoxButton.OK, MessageBoxImage.Information);
             this.DialogResult = true;
             this.Close();
             await _mainwindow.UpdateLevelPacks();
