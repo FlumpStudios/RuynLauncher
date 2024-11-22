@@ -19,6 +19,7 @@ namespace RuynLancher
     [Serializable]
     public class Level
     {
+        public const int MAX_STEP_SIZE = 10;
         public const int MAX_WALL_SIZE = 31;
         public const int TEXTURE_COUNT = 7;
         public const int SFG_TILE_DICTIONARY_SIZE = 64;
