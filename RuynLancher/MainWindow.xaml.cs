@@ -150,6 +150,7 @@ namespace RuynLancher
                         MessageBox.Show($"Pack deleted", "Done!", MessageBoxButton.OK, MessageBoxImage.Information);
                         SaveData.ActivePack = string.Empty;
                         UpdateAvailablePackList();
+                        SaveSettings();
                     }
                     catch(Exception ex)
                     {
