@@ -64,10 +64,12 @@ namespace RuynLancher
             }
         }
 
-
         private static bool ValidateLevelName(string name)
         {
-            return Regex.IsMatch(name, @"^LEVEL([0-8][0-9]|9[0-8])$");
+            var filename = Path.GetFileName(name).ToUpper();
+            filename = filename.Split(".")[0];
+            bool isOk =  Regex.IsMatch(filename, @"^LEVEL([0-8][0-9]|9[0-8])$");
+            return isOk;
         }
         private static bool ValidateLevel(string filePath)
         {         
@@ -144,6 +146,12 @@ namespace RuynLancher
                 }
             }
 
+            if (levelCount < 1)
+            {
+                MessageBox.Show("Could not find any levels in selected pack", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             string zipFilePath = $"{LEVELS_FOLDER}\\levelPack.rpk";
 
             ZipFiles(validFileNames, zipFilePath);
@@ -177,6 +185,7 @@ namespace RuynLancher
             MessageBox.Show($"Uploaded level pack {LevelPackName} with {levelCount} levels ", "Yay!", MessageBoxButton.OK, MessageBoxImage.Information);
             this.DialogResult = true;
             this.Close();
+            File.Delete(zipFilePath);
             await _mainwindow.UpdateLevelPacks();
         }
 

@@ -69,12 +69,26 @@ namespace RuynLancher
 
         private async Task RunUpvote(string levelPackName)
         {
-            await Server.Get().UpvoteAsync(levelPackName, GetUserId());       
+            try
+            {
+                await Server.Get().UpvoteAsync(levelPackName, GetUserId());
+            }
+            catch 
+            {
+                MessageBox.Show($"Error communicating with server", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async Task RunDownVote(string levelPackName)
         {
-            await Server.Get().DownvoteAsync(levelPackName, GetUserId());
+            try
+            {
+                await Server.Get().DownvoteAsync(levelPackName, GetUserId());
+            }
+            catch
+            {
+                MessageBox.Show($"Error communicating with server", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private async void UpvoteButton_Click(object sender, RoutedEventArgs e)
@@ -306,7 +320,16 @@ namespace RuynLancher
         public async Task UpdateLevelPacks()
         {
            LoadingSpinner.Visibility = Visibility.Visible;
-           ICollection<LevelListResponse> levelPacks = await Server.Get().GetLevelListAsync(_searchTerm, 0, 20, _currentFilter, _decending);
+           ICollection<LevelListResponse> levelPacks = [];
+            try
+            {
+                levelPacks = await Server.Get().GetLevelListAsync(_searchTerm, 0, 20, _currentFilter, _decending);
+            }
+            catch
+            {
+                MessageBox.Show($"Error communicating with server", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
            LevelPackDataGrid.ItemsSource = levelPacks.Select(x => new { x.LevelPackName, UploadDate = x.UploadDate.ToString()[..10],x.Author, x.LevelCount, x.DownloadCount, x.Ranking });
            LoadingSpinner.Visibility = Visibility.Hidden;
         }
