@@ -135,7 +135,7 @@ namespace RuynLancher
             }
             else if (e.Key == Key.Delete)
             {
-                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {SaveData.ActivePack} and all its levels??", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {SaveData.ActivePack} and all its levels?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
                     // TODO: These string replaces are in too many places now, need to move to a method
