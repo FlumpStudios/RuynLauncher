@@ -367,6 +367,10 @@ namespace RuynLancher
                     filter = OrderByFilters.DownloadCount;
                     decending = true;
                     break;
+                case "Rating":
+                    filter = OrderByFilters.Ranking;
+                    decending = true;
+                    break;
             }
 
             if (filter == _currentFilter)
