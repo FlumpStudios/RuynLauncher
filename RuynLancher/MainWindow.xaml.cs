@@ -76,6 +76,7 @@ namespace RuynLancher
             catch 
             {
                 MessageBox.Show($"Error communicating with server", "Nope!", MessageBoxButton.OK, MessageBoxImage.Error);
+                LoadingSpinner.Visibility = Visibility.Hidden;
             }
         }
 
@@ -138,7 +139,6 @@ namespace RuynLancher
                 MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete {SaveData.ActivePack} and all its levels?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
-                    // TODO: These string replaces are in too many places now, need to move to a method
                     try
                     {
                         foreach (var file in Directory.GetFiles(folderPath))
@@ -407,7 +407,7 @@ namespace RuynLancher
             }
             else
             {
-                UpdateDisplayName("Welcome to Ruyn! Please enter a display name");
+                UpdateDisplayName("Welcome to Ruyn! Please enter a display name", true);
             }
         }
         
@@ -480,19 +480,31 @@ namespace RuynLancher
             UpdateAvailablePackList();
         }
 
-        private void UpdateDisplayName(string message)
+        private void UpdateDisplayName(string message, bool forceUpdate)
         {
             while (true)
             {
-                string input = Interaction.InputBox(message, "Update display name", "");
+                string? input = Interaction.InputBox(message, "Update display name", SaveData.DisplayName);
+                
                 if (input.Length <= MAX_INPUT_LENGTH)
                 {
                     if (string.IsNullOrEmpty(input))
                     {
-                        input = "Anonymous";
+                        if (forceUpdate)
+                        {
+                            MessageBox.Show($"Please enter a valid display name");
+                        }
+                        else
+                        {
+                            break;
+                        }
+
                     }
-                    SaveData.DisplayName = input;
-                    break;
+                    else
+                    { 
+                        SaveData.DisplayName = input;
+                        break;
+                    }
                 }
                 else
                 {
@@ -507,7 +519,7 @@ namespace RuynLancher
 
         private void EditDisplayName_Click(object sender, RoutedEventArgs e)
         {
-            UpdateDisplayName("Please enter your new Display Name");
+            UpdateDisplayName("Please enter your new Display Name", false);
         }
     }
 }
