@@ -521,5 +521,20 @@ namespace RuynLancher
         {
             UpdateDisplayName("Please enter your new Display Name", false);
         }
+
+        private void DownloadedLevelPacks_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            string folderPath = Path.Combine(GAME_FILE_LOCATION, LEVELS_FOLDER, SaveData.ActivePack).Replace(" ", "_");
+
+            try
+            {
+                // Launch File Explorer at the specified path
+                Process.Start("explorer.exe", folderPath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to open File Explorer: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
 }

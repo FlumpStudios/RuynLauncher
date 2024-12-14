@@ -14,6 +14,8 @@ namespace RuynLancher
 
         public const string EXE_NAME = "Ruyn";
         public const string SETTINGS_SAVE_FILE_NAME = "launcher_Settings.dat";
+        public const string HAD_FILE_EXTENSION = ".HAD";
+        public const string HAD_FILE_TYPE = "HADFile";
 #if DEBUG
         public const string LEVELS_FOLDER = @"c:\projects\NekoEngine\GameData\Levels";
         public const string GAME_FILE_LOCATION = @"c:\projects\NekoEngine\GameData";

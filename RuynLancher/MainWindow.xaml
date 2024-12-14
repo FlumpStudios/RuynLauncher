@@ -58,7 +58,7 @@
                     <Label x:Name="LevelPackLabel" Content="Server level packs" HorizontalAlignment="Left" Margin="10,216,0,0" VerticalAlignment="Top" Width="116"/>
                     <Button x:Name="DownloadButton" Content="Download Pack" IsEnabled="False"  HorizontalAlignment="Left" Margin="10,453,0,0" VerticalAlignment="Top" Height="51" Click="DownloadButton_Click" Width="570"/>
                     <Label x:Name="DownloadedPack" Content="Local level packs" HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top"/>
-                    <ListBox x:Name="DownloadedLevelPacks" Width="570" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,69,0,0" SelectionChanged="DownloadedLevelPacks_SelectionChanged" Height="133" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0" KeyDown="DownloadedLevelPacks_KeyDown"/>
+                    <ListBox x:Name="DownloadedLevelPacks" Width="570" d:ItemsSource="{d:SampleData ItemCount=5}" Margin="10,69,0,0" SelectionChanged="DownloadedLevelPacks_SelectionChanged" Height="133" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0" KeyDown="DownloadedLevelPacks_KeyDown" MouseDoubleClick="DownloadedLevelPacks_MouseDoubleClick"/>
                     <TextBox x:Name="SearchBox" HorizontalAlignment="Left" Margin="423,215,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="117" Height="21"/>
                     <Button x:Name="SearchButton" Content="Search" HorizontalAlignment="Left" Margin="540,215,0,0" VerticalAlignment="Top" Height="21" Click="SearchButton_Click"/>
                     <Image x:Name="LoadingSpinner" HorizontalAlignment="Left" Height="100" Margin="216,282,0,0"
